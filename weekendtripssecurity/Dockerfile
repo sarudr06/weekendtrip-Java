@@ -1,10 +1,8 @@
-# Docker Build Maven Stage
-FROM maven:3-jdk-8-alpine AS build
-# Copy folder in docker
-WORKDIR /opt/app
-COPY ./ /opt/app
-RUN mvn clean install -DskipTests
-# Run spring boot in Docker
-FROM openjdk:8-jdk-alpine
-COPY --from=build /opt/app/target/*.jar weekendtripsecurity.jar
-ENTRYPOINT ["java","-jar","/weekendtripsecurity.jar"]
+FROM camunda/zeebe-simple-monitor:0.17.0-alpha1 as source
+
+FROM openjdk:11-jre
+
+VOLUME /tmp
+ADD target/e_commerce_admin.jar weekendtripsecurity.jar
+
+ENTRYPOINT ["java","-jar","weekendtripsecurity.jar"]
